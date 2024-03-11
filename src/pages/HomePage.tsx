@@ -9,7 +9,6 @@ export default function HomePage() {
   const { data: feeData } = useFeeData({ formatUnits: 'ether' });
   const { address, isConnected } = useAccount();
   const { data: balance } = useBalance({ address, formatUnits: 'ether' });
-
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
