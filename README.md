@@ -55,5 +55,4 @@ Put this in a `.env` file. `.env` is in `.gitignore`.
 
 ## Notes
 
-- `WalletActions.tsx` imports `abi` from `../utils/abi`, but the ABI files are in `src/components/`. Fix the import path (or move the file) before you run the app.
 - The dApp metadata in `App.tsx` still has the example's placeholder values (name, URL, redirect scheme).

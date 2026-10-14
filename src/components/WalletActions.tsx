@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 // import { bscTestnet } from 'wagmi/chains';
 import { parseEther } from "viem";
-import { abi } from "../utils/abi"; // Assuming your ABIs are correctly imported
+import { abi } from "./abi";
 
 export default function WalletActions() {
   const { chain } = useNetwork();
