@@ -1,20 +1,59 @@
-# web3-react-native-dapp-wagmi
+# BetaAppBCST
 
-This repository showcases how to build a modern web3 dApp with React Native, [wagmi](https://wagmi.sh) and [WalletConnect's Web3Modal](https://docs.walletconnect.com/web3modal/react-native/about)
+React Native (Expo) web3 dApp prototype that connects a mobile wallet through WalletConnect Web3Modal and talks to smart contracts on **BNB Smart Chain Testnet**. It started from Callstack's [web3-react-native-dapp-wagmi](https://github.com/callstack/web3-react-native-dapp-wagmi) example.
 
-Read the article for a more detailed explanation: [Best DX for React Native Web3 dApps With Web3Modal and Wagmi](https://www.callstack.com/blog/best-dx-for-react-native-web3-dapps-with-web3modal-and-wagmi)
+## What it does
 
-## Requirements
+- Connects a wallet (MetaMask, Rainbow, Trust and others) with Web3Modal.
+- Shows the current block number and gas price, plus the connected address and balance.
+- Has a **"Check Allowance and Proceed"** button (`src/components/WalletActions.tsx`) that:
+  1. reads the token `allowance` that the connected address has granted to a hardcoded spender contract;
+  2. if the allowance is below 20 tokens, sends an `approve` transaction for 20 tokens;
+  3. otherwise calls `receiveUSDT(20)` on the spender contract.
 
-- [Expo environment setup](https://docs.expo.dev/get-started/installation/#requirements) (Node.js, Git, Watchman)
-- A [Wallet Connect Cloud](https://cloud.walletconnect.com/sign-in) project ID
-- Expo Go app installed in your smartphone
-- One or more web3 wallets installed in your smartphone (e.g. MetaMask, Rainbow Wallet, Trust Wallet, etc)
+The token and spender contract addresses are hardcoded in `WalletActions.tsx`.
 
-## How to run
+## Tech stack
 
-- Rename `.env.example` to `.env` and fill in your Wallet Connect Cloud project ID
-- In `src/components/WalletActions.tsx`, in `usePrepareSendTransaction()`, fill in the `to` field with a valid wallet address, so you can receive test MATIC in the Polygon Mumbai testnet
-- `npm start`
-- Open Expo Go app in your smartphone
-- If your smartphone is in the same network as your computer, the local dev server should appear as the first option. If it doesn't, use the app to scan the QR Code presented in the terminal
+- [Expo](https://expo.dev/) SDK 49, React Native 0.72, TypeScript
+- [wagmi](https://wagmi.sh/) v1 and [viem](https://viem.sh/) v1
+- [@web3modal/wagmi-react-native](https://docs.walletconnect.com/) with `@walletconnect/react-native-compat`
+- ESLint (`@callstack/eslint-config`) and Prettier
+
+## Project structure
+
+```
+App.tsx                         # wagmi + Web3Modal setup (bscTestnet), renders HomePage
+src/
+  pages/HomePage.tsx            # Connect button, chain info, account info
+  components/
+    WalletActions.tsx           # Allowance check, approve, receiveUSDT
+    WalletActions copy.tsx      # Older variant of WalletActions
+    abi.ts, abiII.ts            # Contract ABIs
+assets/                         # App icons and splash
+app.json                        # Expo config
+```
+
+## Getting started
+
+Requirements: the [Expo environment](https://docs.expo.dev/get-started/installation/), the Expo Go app on a phone, and a wallet app on that phone with BSC Testnet funds.
+
+```bash
+npm install
+npm start          # or: npm run android / npm run ios
+```
+
+Then scan the QR code in Expo Go.
+
+## Environment variables
+
+Put this in a `.env` file. `.env` is in `.gitignore`.
+
+| Variable | Purpose |
+| --- | --- |
+| `EXPO_PUBLIC_WALLETCONNECT_CLOUD_PROJECT_ID` | WalletConnect Cloud project ID used by Web3Modal |
+
+## Notes
+
+- `WalletActions.tsx` imports `abi` from `../utils/abi`, but the ABI files are in `src/components/`. Fix the import path (or move the file) before you run the app.
+- The dApp metadata in `App.tsx` still has the example's placeholder values (name, URL, redirect scheme).
